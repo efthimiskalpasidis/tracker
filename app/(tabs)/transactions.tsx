@@ -66,7 +66,7 @@ export default function TransactionsScreen() {
 
   const renderItem = useCallback(({ item }: { item: Transaction }) => {
     const amountValue = Number(item.amount ?? 0);
-    const formattedAmount = Number.isFinite(amountValue) ? `€${amountValue.toFixed(2)}` : '€0.00';
+    const formattedAmount = Number.isFinite(amountValue) ? `${amountValue.toFixed(2)}kr` : '€0.00';
     const formattedDate = item.transaction_date
       ? new Date(item.transaction_date).toLocaleDateString()
       : 'Unknown date';
