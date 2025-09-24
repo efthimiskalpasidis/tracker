@@ -7,10 +7,11 @@ import { useState } from 'react';
 import { Alert, Modal, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const categories = [
-  { key: 'food', label: 'Food', icon: 'fast-food' },
-  { key: 'grocery', label: 'Grocery', icon: 'cart' },
-  { key: 'medicine', label: 'Medicine', icon: 'medkit' },
-  { key: 'transport', label: 'Transport', icon: 'bus' },
+  { key: 'food', label: 'Food', emoji: '🍴', color: '#4CAF50' },
+  { key: 'transport', label: 'Transport', emoji: '🚌', color: '#2196F3' },
+  { key: 'grocery', label: 'Grocery', emoji: '🛒', color: '#FF9800' },
+  { key: 'bills', label: 'Bills', emoji: '🏠', color: '#E91E63' },
+  { key: 'entertainment', label: 'Entertainment', emoji: '🍿', color: '#9C27B0' },
 ];
 
 export default function AddTransactionModal() {
@@ -65,22 +66,28 @@ export default function AddTransactionModal() {
 
       <Text style={styles.label}>Select Category</Text>
       <View style={styles.chipRow}>
-        {categories.map(cat => (
-          <TouchableOpacity
-            key={cat.key}
-            style={[styles.chip, category === cat.key && styles.chipSelected]}
-            onPress={() => setCategory(cat.key)}>
-            <Ionicons
-              name={cat.icon as any}
-              size={18}
-              color={category === cat.key ? '#fff' : '#555'}
-              style={{ marginRight: 6 }}
-            />
-            <Text style={[styles.chipLabel, category === cat.key && { color: '#fff' }]}>
-              {cat.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        {categories.map(cat => {
+          const isSelected = category === cat.key;
+          return (
+            <TouchableOpacity
+              key={cat.key}
+              style={[
+                styles.chip,
+                {
+                  backgroundColor: isSelected ? cat.color : `${cat.color}1A`,
+                  borderColor: cat.color,
+                },
+              ]}
+              onPress={() => setCategory(cat.key)}>
+              <Text style={[styles.chipEmoji, isSelected && styles.chipEmojiSelected]}>
+                {cat.emoji}
+              </Text>
+              <Text style={[styles.chipLabel, { color: isSelected ? '#fff' : cat.color }]}>
+                {cat.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
       <Text style={styles.label}>Note</Text>
@@ -144,12 +151,17 @@ const styles = StyleSheet.create({
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: '#f2f2f2',
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    marginRight: 8,
+    marginBottom: 8,
   },
-  chipSelected: { backgroundColor: '#4a90e2' },
-  chipLabel: { fontSize: 14 },
+  chipEmoji: { fontSize: 16, marginRight: 6 },
+  chipEmojiSelected: { color: '#fff' },
+  chipLabel: { fontSize: 14, fontWeight: '600' },
   noteContainer: { marginBottom: 12 },
   noteInput: { fontSize: 14 },
   dateRow: {

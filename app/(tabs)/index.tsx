@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { useIsFocused } from '@react-navigation/native';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -77,12 +78,25 @@ function groupByCategory(transactions: any[]) {
 export default function PieChartScreen() {
   const [month, setMonth] = useState(new Date());
   const [chartData, setChartData] = useState<any[]>([]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    if (!isFocused) {
+      return;
+    }
+
+    let isMounted = true;
+
     fetchTransactionsForMonth(month).then(txs => {
-      setChartData(groupByCategory(txs));
+      if (isMounted) {
+        setChartData(groupByCategory(txs));
+      }
     });
-  }, [month]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [month, isFocused]);
 
   const total = chartData.reduce((sum, d) => sum + d.y, 0);
 
@@ -112,7 +126,7 @@ export default function PieChartScreen() {
 
         <View style={{ position: 'absolute', alignItems: 'center' }}>
           <Text style={{ fontSize: 14, color: '#666' }}>Total</Text>
-          <Text style={{ fontSize: 18, fontWeight: '700' }}>{total.toFixed(2)} kr</Text>
+          <Text style={{ fontSize: 18, fontWeight: '700' }}>€{total.toFixed(2)}</Text>
         </View>
       </View>
 
@@ -127,7 +141,7 @@ export default function PieChartScreen() {
               <Text style={styles.label}>{item.x}</Text>
               <Text style={styles.subLabel}>{item.transactions} transactions</Text>
             </View>
-            <Text style={styles.amount}>{item.y} kr</Text>
+            <Text style={styles.amount}>€{item.y}</Text>
           </View>
         )}
       />
