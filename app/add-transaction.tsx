@@ -52,7 +52,7 @@ export default function AddTransactionModal() {
   return (
     <View style={styles.container}>
       <Text h4 style={styles.header}>
-        Add Payment
+        Add Transaction
       </Text>
 
       <Input
